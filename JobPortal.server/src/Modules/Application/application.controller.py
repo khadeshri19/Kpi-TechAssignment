@@ -1,12 +1,21 @@
 from sqlalchemy.orm import Session
 from uuid import UUID
+from fastapi import HTTPException, status
 from src.Modules.Application.service import ApplicationService
 from src.Modules.Application.types import ApplicationCreate, ApplicationUpdate
 from src.repositories import CandidateRepository
 
 class ApplicationController:
     @staticmethod
-    def apply_to_job(payload: ApplicationCreate, db: Session):
+    def apply_to_job(payload: ApplicationCreate, db: Session, current_user):
+        candidate = CandidateRepository.get_by_user_id(db, current_user.id)
+        if not candidate:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Candidate profile not found for the current user. Please create a profile first."
+            )
+        # Override the candidate_id in payload with the logged-in candidate's profile ID for security
+        payload.candidate_id = candidate.id
         return ApplicationService.apply_to_job(db, payload)
 
     @staticmethod

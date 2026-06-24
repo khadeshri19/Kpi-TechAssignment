@@ -84,9 +84,11 @@ class ApplicationService:
         return ApplicationRepository.list_by_candidate_id(db, candidate_id)
 
     @staticmethod
-    def get_job_applications_details(db: Session, job_id: UUID) -> List[Any]:
+    def get_job_applications_details(db: Session, job_id: UUID) -> List[dict]:
         """
         Retrieves application records with full candidate details for recruitment views.
+        Uses candidate profile snapshots to preserve historical application-time data,
+        falling back to current database values if snapshot fields are missing.
         """
         job = JobRepository.get_by_id(db, job_id)
         if not job:
@@ -94,7 +96,30 @@ class ApplicationService:
                 status_code=status.HTTP_404_NOT_FOUND,
                 detail="Job listing not found."
             )
-        return ApplicationRepository.list_details_by_job_id(db, job_id)
+        
+        details = ApplicationRepository.list_details_by_job_id(db, job_id)
+        results = []
+        for d in details:
+            snapshot = d.profile_snapshot or {}
+            
+            # Map candidate skills and education from the static snapshot, with current DB fallback
+            skills = snapshot.get("skills", d.candidate_skills)
+            education = snapshot.get("education", d.candidate_education)
+            
+            results.append({
+                "id": d.id,
+                "job_id": d.job_id,
+                "candidate_id": d.candidate_id,
+                "status": d.status,
+                "applied_at": d.applied_at,
+                "profile_snapshot": snapshot,
+                "candidate_name": d.candidate_name,
+                "candidate_email": d.candidate_email,
+                "candidate_skills": skills if isinstance(skills, list) else [],
+                "candidate_education": education
+            })
+            
+        return results
 
     @staticmethod
     def update_application_status(db: Session, application_id: UUID, payload: ApplicationUpdate) -> Application:

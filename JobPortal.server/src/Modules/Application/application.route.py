@@ -17,12 +17,12 @@ admin_guard = RoleChecker([UserRole.admin])
 def apply_to_job(
     payload: ApplicationCreate,
     db: Session = Depends(get_db),
-    _current_user = Depends(candidate_guard)
+    current_user = Depends(candidate_guard)
 ):
     """
     Submits a new job application. Accessible by Candidates only.
     """
-    return ApplicationController.apply_to_job(payload, db)
+    return ApplicationController.apply_to_job(payload, db, current_user)
 
 @router.get("/candidate/applications", response_model=List[ApplicationResponse])
 def get_candidate_applications(

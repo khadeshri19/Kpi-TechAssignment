@@ -25,3 +25,4 @@ class ApplicationDetailResponse(ApplicationResponse):
     candidate_name: str
     candidate_email: str
     candidate_skills: list
+    candidate_education: Optional[str] = None

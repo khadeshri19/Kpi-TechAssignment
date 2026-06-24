@@ -16,7 +16,9 @@ class CandidateController:
         return profile
 
     @staticmethod
-    def upsert_profile(payload: CandidateProfileCreate, db: Session):
+    def upsert_profile(payload: CandidateProfileCreate, db: Session, current_user):
+        # Override payload's user_id with the authenticated user's ID for security
+        payload.user_id = current_user.id
         return CandidateService.upsert_profile(db, payload)
 
     @staticmethod

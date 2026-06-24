@@ -91,9 +91,9 @@ class CandidateService:
             for job in open_jobs
         ]
 
-        from src.Modules.Matching.service import MatchingService
+        from src.ai import run_candidate_matching
         try:
-            return await MatchingService.match_candidate_to_jobs(
+            return run_candidate_matching(
                 candidate_profile_data=profile_dict,
                 open_jobs_data=open_jobs_list,
                 user_query=query

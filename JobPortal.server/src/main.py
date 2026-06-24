@@ -4,8 +4,6 @@ from src.Modules.Auth import router as auth
 from src.Modules.Job import router as jobs
 from src.Modules.Candidate import router as candidates
 from src.Modules.Application import router as applications
-from src.Modules.Admin import router as admin
-from src.Modules.Matching import router as matching
 from src.Modules.Dashboard import router as dashboard
 from src.Modules.Analytics import router as analytics
 
@@ -29,8 +27,6 @@ app.include_router(auth)
 app.include_router(jobs)
 app.include_router(candidates)
 app.include_router(applications)
-app.include_router(admin)
-app.include_router(matching)
 app.include_router(dashboard)
 app.include_router(analytics)
 

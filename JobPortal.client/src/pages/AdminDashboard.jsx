@@ -4,6 +4,11 @@ import '../index.css';
 const API_BASE_URL = 'http://localhost:8000';
 
 export default function AdminDashboard() {
+  const [token, setToken] = useState(localStorage.getItem('admin_token') || null);
+  const [email, setEmail] = useState('admin@test.com');
+  const [password, setPassword] = useState('admin123');
+  const [authError, setAuthError] = useState(null);
+
   const [jobs, setJobs] = useState([]);
   const [selectedJob, setSelectedJob] = useState(null);
   const [applications, setApplications] = useState([]);
@@ -12,22 +17,65 @@ export default function AdminDashboard() {
 
   // Fetch jobs and their application counts on mount
   useEffect(() => {
-    fetchJobsAndCounts();
-  }, []);
+    if (token) {
+      fetchJobsAndCounts();
+    }
+  }, [token]);
 
   // Fetch application details when a job is selected
   useEffect(() => {
-    if (selectedJob) {
+    if (selectedJob && token) {
       fetchApplications(selectedJob.id);
     } else {
       setApplications([]);
     }
-  }, [selectedJob]);
+  }, [selectedJob, token]);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setAuthError(null);
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.detail || 'Login failed. Please check credentials.');
+      }
+      const data = await res.json();
+      localStorage.setItem('admin_token', data.access_token);
+      setToken(data.access_token);
+    } catch (err) {
+      setAuthError(err.message);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin_token');
+    setToken(null);
+    setJobs([]);
+    setSelectedJob(null);
+  };
+
+  const getHeaders = () => {
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    };
+  };
 
   const fetchJobsAndCounts = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/jobs`);
+      const res = await fetch(`${API_BASE_URL}/jobs`, {
+        headers: getHeaders(),
+      });
+      if (res.status === 401 || res.status === 403) {
+        handleLogout();
+        throw new Error('Session expired or unauthorized');
+      }
       if (!res.ok) throw new Error('Failed to fetch jobs');
       const jobsData = await res.json();
 
@@ -35,7 +83,9 @@ export default function AdminDashboard() {
       const jobsWithCounts = await Promise.all(
         jobsData.map(async (job) => {
           try {
-            const appRes = await fetch(`${API_BASE_URL}/jobs/${job.id}/applications`);
+            const appRes = await fetch(`${API_BASE_URL}/jobs/${job.id}/applications`, {
+              headers: getHeaders(),
+            });
             if (appRes.ok) {
               const appData = await appRes.json();
               return { ...job, applicationCount: appData.length };
@@ -62,7 +112,9 @@ export default function AdminDashboard() {
 
   const fetchApplications = async (jobId) => {
     try {
-      const res = await fetch(`${API_BASE_URL}/jobs/${jobId}/applications/details`);
+      const res = await fetch(`${API_BASE_URL}/jobs/${jobId}/applications/details`, {
+        headers: getHeaders(),
+      });
       if (!res.ok) throw new Error('Failed to fetch application details');
       const data = await res.json();
       setApplications(data);
@@ -77,7 +129,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(`${API_BASE_URL}/jobs/${job.id}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders(),
         body: JSON.stringify({
           title: job.title,
           description: job.description,
@@ -98,7 +150,7 @@ export default function AdminDashboard() {
     try {
       const res = await fetch(`${API_BASE_URL}/applications/${appId}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: getHeaders(),
         body: JSON.stringify({ status: newStatus }),
       });
       if (!res.ok) throw new Error('Failed to update application status');
@@ -132,6 +184,45 @@ export default function AdminDashboard() {
     return Object.entries(counts).sort((a, b) => b[1] - a[1]);
   };
 
+  if (!token) {
+    return (
+      <div className="login-overlay">
+        <form className="login-card" onSubmit={handleLogin}>
+          <div className="login-header">
+            <h2>TalentLink Admin</h2>
+            <p>Please log in to manage applications</p>
+          </div>
+          {authError && (
+            <div style={{ padding: '10px 15px', backgroundColor: 'rgba(255, 94, 98, 0.1)', border: '1px solid var(--accent-red)', borderRadius: '8px', color: 'var(--accent-red)', marginBottom: '15px', fontSize: '0.9rem', textAlign: 'center' }}>
+              {authError}
+            </div>
+          )}
+          <div className="login-form-group">
+            <label>Email Address</label>
+            <input 
+              type="email" 
+              className="login-input" 
+              value={email} 
+              onChange={(e) => setEmail(e.target.value)} 
+              required 
+            />
+          </div>
+          <div className="login-form-group">
+            <label>Password</label>
+            <input 
+              type="password" 
+              className="login-input" 
+              value={password} 
+              onChange={(e) => setPassword(e.target.value)} 
+              required 
+            />
+          </div>
+          <button type="submit" className="login-btn">Log In</button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <div style={{ padding: '40px', maxWidth: '1400px', margin: '0 auto' }}>
       <header style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -146,6 +237,7 @@ export default function AdminDashboard() {
             <span style={{ height: '8px', width: '8px', borderRadius: '50%', backgroundColor: 'var(--accent-green)', display: 'inline-block' }}></span>
             <span style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>System Online</span>
           </div>
+          <button className="logout-btn" onClick={handleLogout}>Logout</button>
         </div>
       </header>
 

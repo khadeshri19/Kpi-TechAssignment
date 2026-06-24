@@ -1,6 +1,26 @@
-from src.ai.matcher import score_match
-from src.ai.explainer import generate_explanation
+import importlib.util
+import pathlib
+import sys
 from typing import Dict, Any, List
+
+def _load_module(name, filename):
+    path = pathlib.Path(__file__).parent / filename
+    module_name = f"src.ai.{name}"
+    spec = importlib.util.spec_from_file_location(module_name, str(path))
+    mod = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = mod
+    spec.loader.exec_module(mod)
+    return mod
+
+# Load modules
+embeddings_mod = _load_module("embeddings", "embeddings.ai.py")
+explainer_mod = _load_module("explainer", "explainer.ai.py")
+matcher_mod = _load_module("matcher", "matcher.ai.py")
+
+# Expose key functions
+encode_text = embeddings_mod.encode_text
+generate_explanation = explainer_mod.generate_explanation
+score_match = matcher_mod.score_match
 
 def run_candidate_matching(
     candidate_profile_data: Dict[str, Any],

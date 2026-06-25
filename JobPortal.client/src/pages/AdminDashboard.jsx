@@ -189,7 +189,7 @@ export default function AdminDashboard() {
       <div className="login-overlay">
         <form className="login-card" onSubmit={handleLogin}>
           <div className="login-header">
-            <h2>TalentLink Admin</h2>
+            <h2>JOBBoard Project Admin</h2>
             <p>Please log in to manage applications</p>
           </div>
           {authError && (
@@ -228,7 +228,7 @@ export default function AdminDashboard() {
       <header style={{ marginBottom: '40px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <h1 style={{ fontSize: '2.5rem', margin: 0, background: 'linear-gradient(to right, var(--accent-cyan), var(--accent-purple))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            TalentLink Admin
+            JOBBoard Project Admin
           </h1>
           <p style={{ color: 'var(--text-muted)', margin: '5px 0 0 0' }}>Pipeline Analytics & Applicant Tracker</p>
         </div>

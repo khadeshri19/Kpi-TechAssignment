@@ -1,0 +1,130 @@
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  height: 56px;
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+}
+
+.logo {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  color: var(--text);
+}
+
+.logo span {
+  color: var(--accent);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.role {
+  font-size: var(--fs-sm);
+  color: var(--text-secondary);
+  padding: 2px var(--sp-2);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+}
+
+.logoutBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  color: var(--text-secondary);
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: var(--sp-1) var(--sp-3);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.logoutBtn:hover {
+  background: var(--surface);
+  color: var(--text);
+}
+
+.profileLink {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  transition: border-color var(--transition), transform var(--transition);
+  cursor: pointer;
+}
+
+.profileLink:hover {
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+.avatar {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarPlaceholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background: var(--surface);
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .inner {
+    padding: 0 var(--sp-4);
+  }
+  .logoutBtn {
+    padding: var(--sp-1) var(--sp-2);
+  }
+  .profileLink {
+    width: 28px;
+    height: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  .inner {
+    padding: 0 var(--sp-3);
+  }
+  .role {
+    display: none;
+  }
+  .logo {
+    font-size: var(--fs-base);
+  }
+  .logoutBtn {
+    padding: var(--sp-1) var(--sp-2);
+    font-size: var(--fs-xs);
+  }
+  .profileLink {
+    width: 26px;
+    height: 26px;
+  }
+}

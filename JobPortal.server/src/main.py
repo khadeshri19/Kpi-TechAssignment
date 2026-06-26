@@ -13,10 +13,26 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# Enable CORS for frontend localhost:5173
+import os
+
+# Enable CORS for frontend localhost and deployed environments
+allowed_origins = [
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5174",
+    "https://kpi-tech-assignment.vercel.app"
+]
+
+frontend_url = os.getenv("FRONTEND_URL")
+if frontend_url:
+    allowed_origins.append(frontend_url)
+    if frontend_url.endswith("/"):
+        allowed_origins.append(frontend_url[:-1])
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173", "http://localhost:5174", "http://127.0.0.1:5174"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

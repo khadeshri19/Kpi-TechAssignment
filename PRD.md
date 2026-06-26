@@ -5,8 +5,7 @@
 | Metadata Field | Value |
 |---|---|
 | **Document Version** | 1.0.0 |
-| **Status** | Approved |
-| **Author** | Antigravity AI (Lead Architect & Senior Engineer) |
+| **Author** | Shrikant Khade |
 | **Target Audience** | Engineering Team, Product Managers, Recruiters, and Stakeholders |
 | **Date** | June 24, 2026 |
 

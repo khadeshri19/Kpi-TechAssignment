@@ -14,6 +14,9 @@ class CandidateProfileBase(BaseModel):
     education: str = Field("", max_length=500)
     project_summaries: str = Field("", max_length=2000)
     preferences: CandidateProfilePreferences = Field(default_factory=CandidateProfilePreferences)
+    avatar: Optional[str] = Field(None, description="Base64 encoded profile image")
+    name: Optional[str] = Field(None, description="User's full name / username")
+
 
 class CandidateProfileCreate(CandidateProfileBase):
     pass
@@ -24,6 +27,7 @@ class CandidateProfileUpdate(CandidateProfileBase):
 class CandidateProfileResponse(CandidateProfileBase):
     id: UUID
     created_at: datetime
+    name: Optional[str] = None
     model_config = ConfigDict(from_attributes=True)
 
 class MatchRequest(BaseModel):

@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from uuid import UUID
 from fastapi import HTTPException, status
 from src.repositories import CandidateRepository
-from src.models import CandidateProfile
+from src.models import CandidateProfile, User
 from src.Modules.Candidate.types import CandidateProfileCreate
 from typing import Optional
 
@@ -35,10 +35,19 @@ class CandidateService:
     def upsert_profile(db: Session, payload: CandidateProfileCreate) -> CandidateProfile:
         """
         Creates a new candidate profile or updates an existing one for the specified user.
+        Also updates the corresponding User record's name if it is provided.
         """
+        if payload.name:
+            user = db.query(User).filter(User.id == payload.user_id).first()
+            if user:
+                user.name = payload.name
+                db.add(user)
+
         profile = CandidateRepository.get_by_user_id(db, payload.user_id)
         
         profile_data = payload.model_dump()
+        profile_data.pop("name", None)
+
         # Serialize preferences dictionary if nested object matches Pydantic validation structure
         if "preferences" in profile_data and hasattr(payload.preferences, "model_dump"):
             profile_data["preferences"] = payload.preferences.model_dump()

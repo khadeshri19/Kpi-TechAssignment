@@ -1,0 +1,54 @@
+:root {
+  /* Colors — strict 6-color palette */
+  --bg: #FFFFFF;
+  --surface: #FAFAFA;
+  --border: #E5E5E5;
+  --text: #171717;
+  --text-secondary: #737373;
+  --accent: #E8630A;
+  --accent-hover: #D45A08;
+  --accent-light: #FFF7ED;
+  --danger: #DC2626;
+  --danger-light: #FEF2F2;
+  --success: #16A34A;
+  --success-light: #F0FDF4;
+  --warning: #D97706;
+  --warning-light: #FFFBEB;
+
+  /* Typography */
+  --font: 'Inter', system-ui, -apple-system, sans-serif;
+  --fs-xl: 1.5rem;
+  --fs-lg: 1.125rem;
+  --fs-base: 0.875rem;
+  --fs-sm: 0.75rem;
+  --fs-xs: 0.6875rem;
+  --fw-normal: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --lh: 1.5;
+
+  /* Spacing — strict 4px grid */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 20px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-10: 40px;
+  --sp-12: 48px;
+  --sp-16: 64px;
+
+  /* Layout */
+  --max-width: 1200px;
+  --sidebar-width: 240px;
+
+  /* Borders & Shadows */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-pill: 9999px;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  /* Motion */
+  --transition: 150ms ease;
+}

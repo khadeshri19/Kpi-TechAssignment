@@ -96,70 +96,13 @@ The JOBBoard Project is an automated talent acquisition platform and job board t
 
 ---
 
-## 6. Architecture & Data Flow
+## 6. Implementation & Verification Plan
 
-### 6.1 Component Architecture
-```mermaid
-graph TD
-    Client[React Client SPA] <--> |REST API / JSON / JWT| Gateway[FastAPI Web Server]
-    Gateway <--> |Controller -> Service -> Repo| DB[(PostgreSQL Database)]
-    Gateway <--> |Local Vector Encoding| Matcher[AI Matching Engine]
-    Matcher <--> |Lazy-loaded MiniLM Model| AI[Sentence-Transformers NLP]
-```
-
-### 6.2 Data Model Relationships
-```mermaid
-erDiagram
-    USER {
-        UUID id PK
-        string name
-        string email UK
-        string hashed_password
-        enum role
-        datetime created_at
-    }
-    CANDIDATE_PROFILE {
-        UUID id PK
-        UUID user_id FK
-        string_array skills
-        text education
-        text project_summaries
-        jsonb preferences
-        datetime created_at
-    }
-    JOB_LISTING {
-        UUID id PK
-        string title
-        text description
-        string_array required_skills
-        string experience_level
-        string location
-        enum status
-        datetime created_at
-    }
-    APPLICATION {
-        UUID id PK
-        UUID job_id FK
-        UUID candidate_id FK
-        enum status
-        datetime applied_at
-        jsonb profile_snapshot
-    }
-
-    USER ||--o| CANDIDATE_PROFILE : "has profile"
-    CANDIDATE_PROFILE ||--o{ APPLICATION : "submits"
-    JOB_LISTING ||--o{ APPLICATION : "receives"
-```
-
----
-
-## 7. Implementation & Verification Plan
-
-### 7.1 Automated Testing
+### 6.1 Automated Testing
 - Execute local database migrations using Alembic.
 - Run FastAPI app tests verifying auth tokens, job listings filters, application status changes, and semantic match endpoint structures.
 
-### 7.2 Manual Verification
+### 6.2 Manual Verification
 1. Launch postgres database and run `python seed.py` to seed mock admin and candidate records.
 2. Spin up client development server on `http://localhost:5173`.
 3. Log in with admin credentials (`admin@test.com` / `admin123`).

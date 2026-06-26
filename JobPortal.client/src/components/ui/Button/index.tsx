@@ -19,8 +19,18 @@ export const Button: React.FC<ButtonProps> = ({
   <button
     className={`${styles.btn} ${styles[variant]} ${styles[size]} ${className || ''}`}
     disabled={disabled || loading}
+    aria-busy={loading}
+    aria-disabled={disabled || loading}
     {...props}
   >
-    {loading ? <span className={styles.spinner} /> : children}
+    {loading ? (
+      <>
+        {/* Keep children for screen readers but hide visually; show spinner */}
+        <span className={styles.spinner} aria-hidden="true" />
+        <span style={{ visibility: 'hidden', position: 'absolute' }}>{children}</span>
+      </>
+    ) : (
+      children
+    )}
   </button>
 );

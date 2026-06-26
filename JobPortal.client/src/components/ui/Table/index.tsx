@@ -31,13 +31,17 @@ export function Table<T>({ columns, data, onRowClick, keyExtractor }: TableProps
         </thead>
         <tbody>
           {data.map(item => (
-            <tr 
-              key={keyExtractor(item)} 
-              onClick={() => onRowClick?.(item)}
+            <tr
+              key={keyExtractor(item)}
+              onClick={onRowClick ? () => onRowClick(item) : undefined}
               className={onRowClick ? styles.clickable : ''}
             >
               {columns.map(col => (
-                <td key={col.key}>
+                <td
+                  key={col.key}
+                  // Stop row click from firing when user clicks inside an action cell
+                  onClick={col.render ? (e) => e.stopPropagation() : undefined}
+                >
                   {col.render ? col.render(item) : (item as any)[col.key]}
                 </td>
               ))}

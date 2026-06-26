@@ -36,7 +36,6 @@ export const Login = () => {
     setMode(m);
     setErrors({});
     setMessage(null);
-    // Clear shared fields to avoid stale data leaking between sign-in and sign-up forms
     setEmail('');
     setPassword('');
     setConfirmPassword('');
@@ -77,7 +76,6 @@ export const Login = () => {
 
     try {
       const data = await api.login({ email, password });
-
       localStorage.setItem('token', data.access_token);
       localStorage.setItem('role', data.role);
       localStorage.setItem('name', data.name);
@@ -127,17 +125,29 @@ export const Login = () => {
   return (
     <div className={styles.wrapper}>
       <Card className={styles.card} padding="lg">
-        {/* Tab switcher */}
+
+        {/* ── Tab switcher ── */}
         <div className={styles.tabBar}>
           <button
+            id="tab-signin"
             type="button"
             className={`${styles.tab} ${mode === 'signin' ? styles.tabActive : ''}`}
             onClick={() => switchMode('signin')}
+            aria-selected={mode === 'signin'}
           >
             <User size={15} />
             Sign In
           </button>
-
+          <button
+            id="tab-signup"
+            type="button"
+            className={`${styles.tab} ${mode === 'signup' ? styles.tabActive : ''}`}
+            onClick={() => switchMode('signup')}
+            aria-selected={mode === 'signup'}
+          >
+            <UserPlus size={15} />
+            Sign Up
+          </button>
         </div>
 
         <div className={styles.header}>
@@ -147,7 +157,7 @@ export const Login = () => {
 
         {/* Banner message */}
         {message && (
-          <div className={message.type === 'success' ? styles.successBanner : styles.errorBanner}>
+          <div className={message.type === 'success' ? styles.successBanner : styles.errorBanner} role="alert">
             {message.type === 'success' ? <CheckCircle size={14} /> : <AlertCircle size={14} />}
             {message.text}
           </div>
@@ -155,24 +165,28 @@ export const Login = () => {
 
         {/* ── Sign In Form ── */}
         {mode === 'signin' && (
-          <form onSubmit={handleSignIn} className={styles.form}>
+          <form id="form-signin" onSubmit={handleSignIn} className={styles.form} noValidate>
             <Input
+              id="signin-email"
               label="Email Address"
               type="email"
               value={email}
               onChange={e => { setEmail(e.target.value); clearError('email'); }}
               error={errors.email}
               placeholder="you@example.com"
+              autoComplete="email"
             />
             <Input
+              id="signin-password"
               label="Password"
               type="password"
               value={password}
               onChange={e => { setPassword(e.target.value); clearError('password'); }}
               error={errors.password}
               placeholder="••••••••"
+              autoComplete="current-password"
             />
-            <Button type="submit" loading={loading} style={{ width: '100%', marginTop: 'var(--sp-2)' }}>
+            <Button id="btn-signin" type="submit" loading={loading} style={{ width: '100%', marginTop: 'var(--sp-2)' }}>
               Sign In
             </Button>
           </form>
@@ -180,66 +194,78 @@ export const Login = () => {
 
         {/* ── Sign Up Form ── */}
         {mode === 'signup' && (
-          <form onSubmit={handleSignUp} className={styles.form}>
+          <form id="form-signup" onSubmit={handleSignUp} className={styles.form} noValidate>
             <Input
+              id="signup-name"
               label="Username *"
               value={name}
               onChange={e => { setName(e.target.value); clearError('name'); }}
               error={errors.name}
               placeholder="e.g. alexmorgan"
+              autoComplete="username"
             />
             <Input
+              id="signup-email"
               label="Email Address *"
               type="email"
               value={email}
               onChange={e => { setEmail(e.target.value); clearError('email'); }}
               error={errors.email}
               placeholder="you@example.com"
+              autoComplete="email"
             />
             <div className={styles.fieldRow}>
               <Input
+                id="signup-password"
                 label="Password *"
                 type="password"
                 value={password}
                 onChange={e => { setPassword(e.target.value); clearError('password'); }}
                 error={errors.password}
                 placeholder="Min. 6 characters"
+                autoComplete="new-password"
               />
               <Input
+                id="signup-confirm-password"
                 label="Confirm Password *"
                 type="password"
                 value={confirmPassword}
                 onChange={e => { setConfirmPassword(e.target.value); clearError('confirmPassword'); }}
                 error={errors.confirmPassword}
                 placeholder="Re-enter password"
+                autoComplete="new-password"
               />
             </div>
 
             {/* Role selector */}
             <div className={styles.roleSection}>
               <label className={styles.roleLabel}>I want to join as *</label>
-              <div className={styles.roleOptions}>
+              <div className={styles.roleOptions} role="group" aria-label="Select role">
                 <button
+                  id="role-candidate"
                   type="button"
                   className={`${styles.roleCard} ${role === 'candidate' ? styles.roleCardActive : ''} ${errors.role ? styles.roleCardError : ''}`}
                   onClick={() => { setRole('candidate'); clearError('role'); }}
+                  aria-pressed={role === 'candidate'}
                 >
                   <span className={styles.roleTitle}>Candidate</span>
                   <span className={styles.roleDesc}>Browse &amp; apply for jobs</span>
                 </button>
                 <button
+                  id="role-admin"
                   type="button"
                   className={`${styles.roleCard} ${role === 'admin' ? styles.roleCardActive : ''} ${errors.role ? styles.roleCardError : ''}`}
                   onClick={() => { setRole('admin'); clearError('role'); }}
+                  aria-pressed={role === 'admin'}
                 >
                   <span className={styles.roleTitle}>HR Admin</span>
                   <span className={styles.roleDesc}>Post jobs &amp; manage pipeline</span>
                 </button>
               </div>
-              {errors.role && <span className={styles.roleError}>{errors.role}</span>}
+              {errors.role && <span className={styles.roleError} role="alert">{errors.role}</span>}
             </div>
 
-            <Button type="submit" loading={loading} style={{ width: '100%', marginTop: 'var(--sp-2)' }}>
+            <Button id="btn-create-account" type="submit" loading={loading} style={{ width: '100%', marginTop: 'var(--sp-2)' }}>
               Create Account
             </Button>
           </form>

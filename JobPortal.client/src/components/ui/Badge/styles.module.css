@@ -1,0 +1,15 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-medium);
+  padding: 2px var(--sp-2);
+  border-radius: var(--radius-pill);
+  line-height: 1.5;
+  text-transform: capitalize;
+}
+
+.success { background: var(--success-light); color: var(--success); }
+.warning { background: var(--warning-light); color: var(--warning); }
+.danger  { background: var(--danger-light);  color: var(--danger); }
+.neutral { background: var(--surface);       color: var(--text-secondary); border: 1px solid var(--border); }

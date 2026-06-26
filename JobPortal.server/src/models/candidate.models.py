@@ -13,8 +13,13 @@ class CandidateProfile(Base):
     education = Column(Text, nullable=True)
     project_summaries = Column(Text, nullable=True)
     preferences = Column(JSONB, nullable=False, default=dict) 
+    avatar = Column(Text, nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     
     # Relationships
     user = relationship("User", back_populates="profile")
     applications = relationship("Application", back_populates="candidate", cascade="all, delete-orphan")
+
+    @property
+    def name(self) -> str:
+        return self.user.name if self.user else ""

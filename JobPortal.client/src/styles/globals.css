@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
+@import './theme.css';
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 14px;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: var(--fs-base);
+  font-weight: var(--fw-normal);
+  line-height: var(--lh);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text);
+  font-weight: var(--fw-semibold);
+  line-height: 1.25;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: var(--accent-light);
+  color: var(--text);
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+  width: 100%;
+}
+
+/* Sub-navigation bar styling */
+.subnav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.subnav-container {
+  display: flex;
+  justify-content: space-between;
+  height: 48px;
+  align-items: center;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--sp-6);
+  width: 100%;
+}
+
+.subnav-links {
+  display: flex;
+  gap: var(--sp-4);
+  align-items: center;
+}
+
+.subnav-link {
+  font-size: var(--fs-base);
+  transition: color var(--transition);
+}
+
+@media (max-width: 768px) {
+  .container, .subnav-container {
+    padding: 0 var(--sp-4);
+  }
+  .subnav-container {
+    height: 44px;
+  }
+  .subnav-links {
+    gap: var(--sp-3);
+  }
+  .subnav-link {
+    font-size: var(--fs-sm);
+  }
+}
+
+@media (max-width: 480px) {
+  .container, .subnav-container {
+    padding: 0 var(--sp-3);
+  }
+  .subnav-container {
+    height: 40px;
+  }
+  .subnav-links {
+    gap: var(--sp-2);
+  }
+  .subnav-link {
+    font-size: var(--fs-xs);
+  }
+}

@@ -1,0 +1,154 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background-color: transparent;
+  transition: background-color var(--transition-fast), border-bottom var(--transition-fast), padding var(--transition-fast);
+  padding: 1.5rem 0;
+}
+
+.scrolled {
+  background-color: var(--bg-main);
+  border-bottom: 1px solid var(--border-color);
+  padding: 1rem 0;
+  box-shadow: var(--shadow-sm);
+}
+
+.navContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: var(--font-sans);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-heading);
+  letter-spacing: -0.02em;
+}
+
+.logo span {
+  color: var(--color-primary);
+}
+
+.desktopNav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.navLink {
+  color: var(--text-body);
+  font-weight: 500;
+  font-size: var(--fs-small);
+}
+
+.navLink:hover, .active {
+  color: var(--color-primary);
+}
+
+.authActions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.signInLink {
+  color: var(--text-heading);
+  font-weight: 600;
+  font-size: var(--fs-small);
+}
+
+.signInLink:hover {
+  color: var(--color-primary);
+}
+
+.postJobBtn {
+  background: var(--gradient-primary);
+  color: var(--text-inverse);
+  border: none;
+  border-radius: var(--radius-sm);
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: var(--fs-small);
+  cursor: pointer;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.postJobBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.hamburger {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--text-heading);
+  cursor: pointer;
+}
+
+/* Mobile Drawer */
+.mobileDrawer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: var(--bg-main);
+  border-top: 1px solid var(--border-color);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-10px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all var(--transition-fast);
+}
+
+.drawerOpen {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.drawerContent {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-3) var(--space-4);
+  gap: var(--space-3);
+}
+
+.mobileNavLink {
+  color: var(--text-heading);
+  font-weight: 500;
+  font-size: var(--fs-body);
+  padding-bottom: var(--space-2);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mobileAuthActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-2);
+}
+
+.mobileSignIn {
+  color: var(--text-heading);
+  font-weight: 600;
+  font-size: var(--fs-body);
+  text-align: center;
+  padding: var(--space-2) 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .desktopNav, .authActions {
+    display: none;
+  }
+  
+  .hamburger {
+    display: block;
+  }
+}
